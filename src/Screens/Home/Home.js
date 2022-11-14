@@ -16,15 +16,56 @@ import { getBandName } from '../../Functions/getBandName'
 import { Buttons, Colors, Containers, Fonts, Icons, Images, Index, Misc, Window } from '../../Styles/Index'
 
 export const Home = ({ navigation }) => {
+	const [word1Info, setWord1Info] = useState({})
+	const [word2Info, setWord2Info] = useState({})
+	const [bandName, setBandName] = useState('')
+
+	const pressGetBandName = () => {
+		// getBandName().then(word => setWord1Info(word))
+		// getBandName().then(word => setWord2Info(word))
+
+		// while (word1Info.type !== 'adjective') {
+		// 	getBandName().then(word => {
+		// 		console.log(word)
+		// 		setWord1Info(word)
+		// 	})
+		// }
+		if (word1Info.type !== 'adjective') {
+			getBandName().then(word => {
+				// console.log(word)
+				setWord1Info(word)
+			})
+		}
+
+		if (word2Info.type !== 'noun') {
+			getBandName().then(word => {
+				// console.log(word)
+				setWord2Info(word)
+			})
+		}
+
+		setBandName(`The ${word1Info.word} ${word2Info.word}s`)
+
+		// while (word1Info.type !== 'noun') {
+		// 	getBandName().then(word => setWord2Info(word))
+		// }
+	}
+
+	useEffect(() => console.log('word1Info', word1Info.word, word1Info.type), [word1Info])
+	useEffect(() => console.log('word2Info', word2Info.word, word2Info.type), [word2Info])
+
 	return (
 		<View style={styles.content}>
 			<View style={styles.titleView}>
 				<Text style={styles.h2}>Random Band Name Generator</Text>
 			</View>
-			<View style={styles.navRow}>
-				<TouchableOpacity style={styles.navBtn} onPress={getBandName}>
-					<Text style={styles.body}>Get Band Name</Text>
-				</TouchableOpacity>
+			{/* <View style={styles.navRow}> */}
+			<TouchableOpacity style={styles.navBtn} onPress={pressGetBandName}>
+				<Text style={styles.body}>Get Band Name</Text>
+			</TouchableOpacity>
+			{/* </View> */}
+			<View style={styles.word1Info}>
+				<Text style={styles.h2}>{bandName}</Text>
 			</View>
 		</View>
 	)
@@ -48,9 +89,12 @@ const styles = StyleSheet.create({
 	navBtn: {
 		...Buttons.transparent,
 		marginHorizontal: Misc.margin,
+		marginTop: Misc.padding * 2,
 	},
 	titleView: {
-		// backgroundColor: 'red',
 		width: Window.width * 0.6,
+	},
+	word1Info: {
+		marginTop: Misc.padding * 2,
 	},
 })
