@@ -17,38 +17,32 @@ import { Buttons, Colors, Containers, Fonts, Icons, Images, Index, Misc, Window 
 
 export const Home = ({ navigation }) => {
 	const [word1Info, setWord1Info] = useState({})
+	console.log('file: Home.js -> line 20 -> Home -> word1Info', word1Info)
 	const [word2Info, setWord2Info] = useState({})
+	console.log('file: Home.js -> line 22 -> Home -> word2Info', word2Info)
 	const [bandName, setBandName] = useState('')
+	console.log('file: Home.js -> line 24 -> Home -> bandName', bandName)
 
 	const pressGetBandName = () => {
-		// getBandName().then(word => setWord1Info(word))
-		// getBandName().then(word => setWord2Info(word))
-
-		// while (word1Info.type !== 'adjective') {
-		// 	getBandName().then(word => {
-		// 		console.log(word)
-		// 		setWord1Info(word)
-		// 	})
-		// }
 		if (word1Info.type !== 'adjective') {
 			getBandName().then(word => {
-				// console.log(word)
 				setWord1Info(word)
 			})
 		}
 
 		if (word2Info.type !== 'noun') {
 			getBandName().then(word => {
-				// console.log(word)
 				setWord2Info(word)
 			})
 		}
 
-		setBandName(`The ${word1Info.word} ${word2Info.word}s`)
+		setBandName(`The ${word1Info?.word} ${word2Info?.word}s`)
+	}
 
-		// while (word1Info.type !== 'noun') {
-		// 	getBandName().then(word => setWord2Info(word))
-		// }
+	const resetBandName = () => {
+		setWord1Info({})
+		setWord2Info({})
+		setBandName('')
 	}
 
 	useEffect(() => console.log('word1Info', word1Info.word, word1Info.type), [word1Info])
@@ -58,15 +52,16 @@ export const Home = ({ navigation }) => {
 		<View style={styles.content}>
 			<View style={styles.titleView}>
 				<Text style={styles.h2}>Random Band Name Generator</Text>
+				<TouchableOpacity style={styles.navBtn} onPress={pressGetBandName}>
+					<Text style={styles.body}>Get Band Name</Text>
+				</TouchableOpacity>
+				<View style={styles.word1Info}>
+					<Text style={styles.h2}>{bandName}</Text>
+				</View>
 			</View>
-			{/* <View style={styles.navRow}> */}
-			<TouchableOpacity style={styles.navBtn} onPress={pressGetBandName}>
-				<Text style={styles.body}>Get Band Name</Text>
+			<TouchableOpacity style={styles.resetBtn} onPress={resetBandName}>
+				<Text style={styles.body}>Reset</Text>
 			</TouchableOpacity>
-			{/* </View> */}
-			<View style={styles.word1Info}>
-				<Text style={styles.h2}>{bandName}</Text>
-			</View>
 		</View>
 	)
 }
@@ -74,6 +69,8 @@ export const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
 	content: {
 		...Containers.content,
+		// backgroundColor: 'red',
+		justifyContent: 'space-between',
 	},
 	h2: {
 		...Fonts.h2,
@@ -90,6 +87,12 @@ const styles = StyleSheet.create({
 		...Buttons.transparent,
 		marginHorizontal: Misc.margin,
 		marginTop: Misc.padding * 2,
+	},
+	resetBtn: {
+		...Buttons.transparent,
+		marginHorizontal: Misc.margin,
+		marginBottom: Misc.padding,
+		// marginTop: Misc.padding * 2,
 	},
 	titleView: {
 		width: Window.width * 0.6,
