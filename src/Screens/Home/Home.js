@@ -16,37 +16,62 @@ import { getBandName } from '../../Functions/getBandName'
 import { Buttons, Colors, Containers, Fonts, Icons, Images, Index, Misc, Window } from '../../Styles/Index'
 
 export const Home = ({ navigation }) => {
-	const [word1Info, setWord1Info] = useState({})
-	console.log('file: Home.js -> line 20 -> Home -> word1Info', word1Info)
-	const [word2Info, setWord2Info] = useState({})
-	console.log('file: Home.js -> line 22 -> Home -> word2Info', word2Info)
+	const [adjInfo, setAdjInfo] = useState({})
+	// console.log('file: Home.js -> line 20 -> Home -> adjInfo', adjInfo)
+	const [nounInfo, setNounInfo] = useState({})
+	// console.log('file: Home.js -> line 22 -> Home -> nounInfo', nounInfo)
 	const [bandName, setBandName] = useState('')
-	console.log('file: Home.js -> line 24 -> Home -> bandName', bandName)
+	// console.log('file: Home.js -> line 24 -> Home -> bandName', bandName)
+
+	// const pressGetBandName = () => {
+	// 	// if (adjInfo.type !== 'adjective') {
+	// 	getBandName().then(adj => {
+	// 		console.log('file: Home.js -> line 29 -> getBandName -> word', adj.word)
+	// 		// setAdjInfo(adj).then(() => {
+	// 		// 	if (nounInfo.type !== 'noun') {
+	// 		// 		getBandName().then(noun => {
+	// 		// 			// console.log('file: Home.js -> line 36 -> getBandName -> word', word.word)
+	// 		// 			setNounInfo(noun).then(() => {
+	// 		// 				setBandName(`The ${adjInfo.word} ${nounInfo.word}s`)
+	// 		// 			})
+	// 		// 		})
+	// 		// 	}
+	// 		// })
+	// 	})
+	// 	// }
+	// }
 
 	const pressGetBandName = () => {
-		if (word1Info.type !== 'adjective') {
-			getBandName().then(word => {
-				setWord1Info(word)
+		console.log('')
+		console.log('START pressGetBandName()')
+
+		console.log('line 49 -> adjInfo.type', adjInfo.type)
+		if (adjInfo.type !== 'adjective') {
+			getBandName().then(adjRes => {
+				console.log('file: Home.js -> line 51 -> getBandName -> adjRes', adjRes)
+				setAdjInfo(adjRes)
+
+				// if (adjRes.type === 'adjective') {
+				// 	console.log('adjective')
+				// } else {
+				// 	console.log('not adjective')
+				// }
+
+				console.log('')
+				console.log('END pressGetBandName()')
+				console.log('')
 			})
 		}
-
-		if (word2Info.type !== 'noun') {
-			getBandName().then(word => {
-				setWord2Info(word)
-			})
-		}
-
-		setBandName(`The ${word1Info?.word} ${word2Info?.word}s`)
 	}
 
 	const resetBandName = () => {
-		setWord1Info({})
-		setWord2Info({})
+		setAdjInfo({})
+		setNounInfo({})
 		setBandName('')
 	}
 
-	useEffect(() => console.log('word1Info', word1Info.word, word1Info.type), [word1Info])
-	useEffect(() => console.log('word2Info', word2Info.word, word2Info.type), [word2Info])
+	useEffect(() => console.log('line 73 -> adjInfo', adjInfo.word, adjInfo.type), [adjInfo])
+	useEffect(() => console.log('line 74 -> nounInfo', nounInfo.word, nounInfo.type), [nounInfo])
 
 	return (
 		<View style={styles.content}>
@@ -55,7 +80,7 @@ export const Home = ({ navigation }) => {
 				<TouchableOpacity style={styles.navBtn} onPress={pressGetBandName}>
 					<Text style={styles.body}>Get Band Name</Text>
 				</TouchableOpacity>
-				<View style={styles.word1Info}>
+				<View style={styles.adjInfo}>
 					<Text style={styles.h2}>{bandName}</Text>
 				</View>
 			</View>
@@ -97,7 +122,7 @@ const styles = StyleSheet.create({
 	titleView: {
 		width: Window.width * 0.6,
 	},
-	word1Info: {
+	adjInfo: {
 		marginTop: Misc.padding * 2,
 	},
 })

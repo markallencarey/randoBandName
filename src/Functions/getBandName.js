@@ -1,8 +1,8 @@
 import axios from 'axios'
 
 export const getBandName = async () => {
-	// console.log('')
-	// console.log('running getBandName')
+	console.log('')
+	console.log('START getBandName()')
 
 	let wordObj = {}
 
@@ -10,6 +10,12 @@ export const getBandName = async () => {
 	const ninjaKey = 'aOoTxtqClrbowL/7cGnhow==EVkkdHt9D40wFZxu'
 
 	const ninjaReq = ninjaURL + ninjaKey
+
+	const ninjaConfig = {
+		headers: {
+			"X-Api-Key": ninjaKey
+		}
+	}
 
 	const dictURL = 'https://www.dictionaryapi.com/api/v3/references/collegiate/json/'
 	const dictKey = '6f9e1d71-aefe-4ac4-b934-9478aa4a3369'
@@ -20,30 +26,36 @@ export const getBandName = async () => {
 	const thesReq = word => thesURL + word + '?key=' + thesKey
 
 	await axios
-		.get(ninjaReq)
+		.get(ninjaURL, ninjaConfig)
 		.then(async res => {
-			const ninjaRes = res?.data?.word
+			console.log('file: getBandName.js -> line 25 -> getBandName -> res', res)
+			// const ninjaRes = res?.data?.word
+			// const ninjaRes = res?.data
+			// console.log('file: getBandName.js -> line 33 -> getBandName -> ninjaRes', ninjaRes)
 
-			wordObj = { ...wordObj, word: ninjaRes, ninjaURL: ninjaReq, dictURL: dictReq(ninjaRes), thesURL: thesReq(ninjaRes) }
+			// wordObj = { ...wordObj, word: ninjaRes, ninjaURL: ninjaReq, dictURL: dictReq(ninjaRes), thesURL: thesReq(ninjaRes) }
 
-			await axios
-				.get(dictReq(ninjaRes))
-				.then(async res2 => {
-					const dictRes = res2?.data[0]
+			// await axios
+			// 	.get(dictReq(ninjaRes))
+			// 	.then(async res2 => {
+			// 		console.log('file: getBandName.js -> line 32 -> getBandName -> res2', res2)
+					
+			// 		// const dictRes = res2?.data[0]
 
-					await axios.get(thesReq(ninjaRes)).then(res3 => {
-						const thesRes = res3.data
-						const synonyms = thesRes[0]?.meta?.syns[0]
+			// 		// await axios.get(thesReq(ninjaRes)).then(res3 => {
+			// 		// 	const thesRes = res3.data
+			// 		// 	const synonyms = thesRes[0]?.meta?.syns[0]
 
-						wordObj = { ...wordObj, definition: dictRes.shortdef[0], type: dictRes.fl, synonyms: synonyms }
-					})
-				})
-				.catch(e => console.log('error: ', e))
+			// 		// 	wordObj = { ...wordObj, definition: dictRes.shortdef[0], type: dictRes.fl, synonyms: synonyms }
+			// 			// })
+			// 			// .catch(e => console.log('error: ', e))
+			// 	})
+			// 	.catch(e => console.log('error: ', e))
 		})
 		.catch(e => console.log('error: ', e))
 
-	// console.log('file: getBandName.js -> line 49 -> getBandName -> wordObj', wordObj)
-	// console.log('finished running getBandName')
-	// console.log('')
+	console.log('file: getBandName.js -> line 49 -> getBandName -> wordObj', wordObj)
+	console.log('END getBandName()')
+	console.log('')
 	return wordObj
 }
