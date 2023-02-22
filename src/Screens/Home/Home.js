@@ -21,26 +21,23 @@ export const Home = ({ navigation }) => {
 	const [bandName, setBandName] = useState('')
 
 	const pressGetWord = () => {
-		let count = 0
+		// 	if (adjInfo.type !== 'adjective') {
+		// 		console.log('adj type is NOT adjective')
+		// 	} else {
+		// 		console.log('adj type IS adjective')
+		// 	}
+		// })
 
-		// if (adjInfo.type !== 'adjective') {
-		getWord().then(adjRes => {
-			console.log('start getWord')
-			setAdjInfo(adjRes)
-			count++
-			console.log('count', count)
-		})
-		// } else {
-		// 	console.log('adj type is already', adjInfo.type)
-		// }
+		if (nounInfo.type !== 'noun') {
+			getWord().then(nounRes => {
+				setNounInfo(nounRes)
 
-		// if (nounInfo.type !== 'noun') {
-		// 	getWord().then(nounRes => {
-		// 		setNounInfo(nounRes)
-		// 	})
-		// } else {
-		// 	console.log('noun type is already', nounInfo.type)
-		// }
+				if (nounInfo.type !== 'noun') {
+					console.log('noun type is NOT noun')
+					pressGetWord()
+				}
+			})
+		}
 	}
 
 	const resetBandName = () => {
