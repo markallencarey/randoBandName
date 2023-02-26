@@ -16,38 +16,55 @@ import { getWord } from '../../Functions/getWord'
 import { Buttons, Colors, Containers, Fonts, Icons, Images, Index, Misc, Window } from '../../Styles/Index'
 
 export const Home = ({ navigation }) => {
-	const [adjInfo, setAdjInfo] = useState({})
-	const [nounInfo, setNounInfo] = useState({})
-	const [bandName, setBandName] = useState('')
+	const [adjInfo, setAdjInfo] = useState()
+	const [nounInfo, setNounInfo] = useState()
+	const [bandName, setBandName] = useState()
+
+	const getAdj = () => {
+		getWord().then(adjRes => {
+			if (adjRes.type === 'adjective') {
+				adjRes.word = adjRes.word[0].toUpperCase() + adjRes.word.slice(1).toLowerCase()
+				setAdjInfo(adjRes)
+			} else {
+				getAdj()
+			}
+		})
+	}
+
+	const getNoun = () => {
+		getWord().then(nounRes => {
+			if (nounRes.type === 'noun') {
+				nounRes.word = nounRes.word[0].toUpperCase() + nounRes.word.slice(1).toLowerCase()
+				setNounInfo(nounRes)
+			} else {
+				getNoun()
+			}
+		})
+	}
+
+	// const getName = async () => {
+	// 	await getAdj()
+	// 	await getNoun()
+	// }
 
 	const pressGetWord = () => {
-		// 	if (adjInfo.type !== 'adjective') {
-		// 		console.log('adj type is NOT adjective')
-		// 	} else {
-		// 		console.log('adj type IS adjective')
-		// 	}
-		// })
+		getAdj()
+		getNoun()
 
-		if (nounInfo.type !== 'noun') {
-			getWord().then(nounRes => {
-				setNounInfo(nounRes)
-
-				if (nounInfo.type !== 'noun') {
-					console.log('noun type is NOT noun')
-					pressGetWord()
-				}
-			})
+		if (adjInfo && nounInfo) {
+			setBandName(`The ${adjInfo.word} ${nounInfo.word}s`)
 		}
 	}
 
 	const resetBandName = () => {
-		setAdjInfo({})
-		setNounInfo({})
+		setAdjInfo()
+		setNounInfo()
 		setBandName('')
 	}
 
-	useEffect(() => console.log('line 73 -> adjInfo', adjInfo.word, adjInfo.type), [adjInfo])
-	useEffect(() => console.log('line 74 -> nounInfo', nounInfo.word, nounInfo.type), [nounInfo])
+	useEffect(() => console.log('line 73 -> adjInfo', adjInfo?.word, adjInfo?.type), [adjInfo])
+	useEffect(() => console.log('line 74 -> nounInfo', nounInfo?.word, nounInfo?.type), [nounInfo])
+	useEffect(() => console.log('line 74 -> bandName', bandName), [bandName])
 
 	return (
 		<View style={styles.content}>
@@ -56,9 +73,7 @@ export const Home = ({ navigation }) => {
 				<TouchableOpacity style={styles.navBtn} onPress={pressGetWord}>
 					<Text style={styles.body}>Get Band Name</Text>
 				</TouchableOpacity>
-				<View style={styles.adjInfo}>
-					<Text style={styles.h2}>{bandName}</Text>
-				</View>
+				<View style={styles.adjInfo}>{adjInfo && nounInfo ? <Text style={styles.h2}>{bandName}</Text> : null}</View>
 			</View>
 			<TouchableOpacity style={styles.resetBtn} onPress={resetBandName}>
 				<Text style={styles.body}>Reset</Text>
@@ -70,7 +85,6 @@ export const Home = ({ navigation }) => {
 const styles = StyleSheet.create({
 	content: {
 		...Containers.content,
-		// backgroundColor: 'red',
 		justifyContent: 'space-between',
 	},
 	h2: {
@@ -93,7 +107,6 @@ const styles = StyleSheet.create({
 		...Buttons.transparent,
 		marginHorizontal: Misc.margin,
 		marginBottom: Misc.padding,
-		// marginTop: Misc.padding * 2,
 	},
 	titleView: {
 		width: Window.width * 0.6,
